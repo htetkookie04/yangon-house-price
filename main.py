@@ -28,8 +28,8 @@ try:
         model_data = pickle.load(f)
     
     # Extract the actual Scikit-Learn Pipeline object from the dictionary
-    model_pipeline = model_data["model"] [cite: 4]
-    
+    model_pipeline = model_data["pipeline"]
+
     print("Model pipeline successfully extracted from container!")
 except Exception as e:
     raise RuntimeError(f"Failed to load model file at {MODEL_PATH}: {str(e)}")
@@ -80,4 +80,4 @@ def get_supported_townships():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=5000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)

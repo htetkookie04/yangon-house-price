@@ -3,153 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Estate Price Predictor</title>
+    <title>Yangon House Price Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @layer base {
+            html { font-family: 'Inter', system-ui, sans-serif; }
+            .font-serif-display { font-family: 'DM Serif Display', Georgia, serif; }
+            /* hide number spinners — physical-form feel, no UI chrome */
+            input[type=number]::-webkit-outer-spin-button,
+            input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
+            input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+        }
+    </style>
 </head>
-<body class="bg-slate-50 font-sans min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<body class="min-h-screen bg-[#F7F4EF] text-[#1A1A1A] antialiased">
 
-    <div class="max-w-xl w-full space-y-8 bg-white p shadow-xl rounded-2xl border border-slate-100 p-8">
-        <div>
-            <h2 class="text-center text-3xl font-extrabold text-slate-900 tracking-tight">
-                House Price Valuator
-            </h2>
-            <p class="mt-2 text-center text-sm text-slate-500">
-                Provide core real estate specifications to evaluate estimated baseline structural valuation.
+    <main class="mx-auto w-full max-w-xl px-5 pt-14 pb-20 sm:pt-20">
+
+        <!-- Heading — left aligned, restrained, editorial -->
+        <header class="mb-9 max-w-md">
+            <p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#089da1]">Yangon · Property Valuation</p>
+            <h1 class="font-serif-display text-3xl leading-tight sm:text-4xl">Yangon House Price Estimator</h1>
+            <p class="mt-3 text-[15px] leading-relaxed text-[#5C5C5C]">
+                Fill in the property details below and we'll return an estimated market value in lakhs.
             </p>
-        </div>
-        
-        <form id="predictionForm" class="mt-8 space-y-6">
-            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                
-                <div class="sm:col-span-2">
-                    <label for="tsp_en" class="block text-sm font-medium text-slate-700">Township Region</label>
-                    <select id="tsp_en" name="tsp_en" required class="mt-1 block w-full rounded-md border border-slate-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm text-slate-800">
-                        <option value="">Select geographic location...</option>
-                    </select>
-                </div>
+        </header>
 
+        <!-- Card — bordered, grounded, no float -->
+        <div class="rounded-md border border-[#D9D4CC] bg-white">
+            <form id="predictionForm" class="space-y-7 px-6 py-7 sm:px-8 sm:py-9" novalidate>
+
+                <!-- Township -->
                 <div>
-                    <label for="bedroom" class="block text-sm font-medium text-slate-700">Bedrooms</label>
-                    <input type="number" name="bedroom" id="bedroom" min="0" value="2" required class="mt-1 block w-full rounded-md border border-slate-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm text-slate-800">
+                    <label for="tsp_en" class="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#5C5C5C]">
+                        <!-- hand-drawn map pin, slightly irregular -->
+                        <svg class="h-4 w-4 text-[#089da1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 21.2c-.4 0-3.9-3.6-5.4-6.1C5.2 13 4.6 11.4 4.8 9.6 5.2 6 8.2 3.4 12 3.6c3.7.2 6.6 3 6.7 6.4.1 1.7-.6 3.4-1.8 5.2-1.6 2.5-4.6 6-4.9 6Z"/>
+                            <path d="M9.4 9.9c0-1.4 1.2-2.5 2.7-2.4 1.4 0 2.5 1.2 2.4 2.6 0 1.4-1.2 2.4-2.6 2.4-1.4 0-2.5-1.2-2.5-2.6Z"/>
+                        </svg>
+                        Township
+                    </label>
+                    <div class="relative">
+                        <select id="tsp_en" name="tsp_en" required
+                            class="w-full appearance-none rounded-md border border-[#D9D4CC] bg-white px-3.5 py-2.5 pr-10 text-[15px] text-[#1A1A1A] focus:border-[#089da1] focus:outline-none focus:ring-1 focus:ring-[#089da1]">
+                            <option value="">Loading townships…</option>
+                        </select>
+                        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#5C5C5C]">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+                        </span>
+                    </div>
+                    <p id="tsp_error" class="hidden mt-2 text-[13px] font-medium text-red-700">Please select a township.</p>
                 </div>
 
-                <div>
-                    <label for="bathroom" class="block text-sm font-medium text-slate-700">Bathrooms</label>
-                    <input type="number" name="bathroom" id="bathroom" min="0" value="1" required class="mt-1 block w-full rounded-md border border-slate-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm text-slate-800">
+                <!-- Numeric fields — intentionally uneven spacing -->
+                <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
+                    <div>
+                        <label for="bedroom" class="mb-2 block text-[11px] font-semibold uppercase tracking-widest text-[#5C5C5C]">Bedrooms</label>
+                        <input type="number" id="bedroom" name="bedroom" min="0" max="20" step="1" value="2" required
+                            class="w-full rounded-md border border-[#D9D4CC] bg-white px-3.5 py-2.5 text-[15px] text-[#1A1A1A] focus:border-[#089da1] focus:outline-none focus:ring-1 focus:ring-[#089da1]">
+                    </div>
+                    <div>
+                        <label for="bathroom" class="mb-2 block text-[11px] font-semibold uppercase tracking-widest text-[#5C5C5C]">Bathrooms</label>
+                        <input type="number" id="bathroom" name="bathroom" min="0" max="20" step="1" value="1" required
+                            class="w-full rounded-md border border-[#D9D4CC] bg-white px-3.5 py-2.5 text-[15px] text-[#1A1A1A] focus:border-[#089da1] focus:outline-none focus:ring-1 focus:ring-[#089da1]">
+                    </div>
+                    <div>
+                        <label for="aircorn" class="mb-2 block text-[11px] font-semibold uppercase tracking-widest text-[#5C5C5C]">Air Conditioners</label>
+                        <input type="number" id="aircorn" name="aircorn" min="0" max="20" step="1" value="1" required
+                            class="w-full rounded-md border border-[#D9D4CC] bg-white px-3.5 py-2.5 text-[15px] text-[#1A1A1A] focus:border-[#089da1] focus:outline-none focus:ring-1 focus:ring-[#089da1]">
+                    </div>
+                    <div>
+                        <label for="floor" class="mb-2 block text-[11px] font-semibold uppercase tracking-widest text-[#5C5C5C]">Floor Level</label>
+                        <input type="number" id="floor" name="floor" min="0" max="50" step="1" value="1" required
+                            class="w-full rounded-md border border-[#D9D4CC] bg-white px-3.5 py-2.5 text-[15px] text-[#1A1A1A] focus:border-[#089da1] focus:outline-none focus:ring-1 focus:ring-[#089da1]">
+                    </div>
                 </div>
 
-                <div>
-                    <label for="aircorn" class="block text-sm font-medium text-slate-700">Air Conditioners</label>
-                    <input type="number" name="aircorn" id="aircorn" min="0" value="1" required class="mt-1 block w-full rounded-md border border-slate-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm text-slate-800">
+                <!-- Overhead tank — label + toggle on one line, no filler copy -->
+                <div class="flex items-center justify-between border-t border-[#D9D4CC] pt-6">
+                    <label for="overhead_tank" class="text-[11px] font-semibold uppercase tracking-widest text-[#5C5C5C]">Overhead Water Tank</label>
+                    <label class="relative inline-flex cursor-pointer items-center">
+                        <input type="checkbox" id="overhead_tank" class="peer sr-only" checked>
+                        <div class="h-6 w-11 rounded-md border border-[#D9D4CC] bg-[#F7F4EF] peer-checked:border-[#089da1] peer-checked:bg-[#089da1]"></div>
+                        <div class="absolute left-1 top-1 h-4 w-4 rounded-[3px] bg-[#5C5C5C] transition-transform peer-checked:translate-x-5 peer-checked:bg-white"></div>
+                    </label>
                 </div>
 
-                <div>
-                    <label for="floor" class="block text-sm font-medium text-slate-700">Floor Level</label>
-                    <input type="number" name="floor" id="floor" value="1" required class="mt-1 block w-full rounded-md border border-slate-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm text-slate-800">
-                </div>
-
-                <div class="sm:col-span-2">
-                    <label for="overhead_tank" class="block text-sm font-medium text-slate-700">Overhead Tank (Units/Status)</label>
-                    <input type="number" name="overhead_tank" id="overhead_tank" value="1" required class="mt-1 block w-full rounded-md border border-slate-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm text-slate-800">
-                </div>
-            </div>
-
-            <div>
-                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
-                    Calculate Valuation Matrix
+                <!-- Submit — flat, full width, rounded-md -->
+                <button type="submit" id="submitBtn"
+                    class="flex w-full items-center justify-center gap-2 rounded-md bg-[#089da1] px-4 py-3 text-[15px] font-semibold text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#089da1] focus:ring-offset-2 focus:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60">
+                    <svg id="btnSpinner" class="hidden h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
+                    <span id="btnText">Estimate Price</span>
                 </button>
-            </div>
-        </form>
-
-        <div id="resultBox" class="hidden mt-6 p-4 rounded-xl border text-center transition duration-150 ease-in-out">
-            <p id="resultTitle" class="text-xs uppercase font-semibold tracking-wider text-slate-400"></p>
-            <p id="resultValue" class="text-3xl font-black mt-1 text-slate-800"></p>
+            </form>
         </div>
-    </div>
+
+        <!-- Result — left-border accent, no colored card -->
+        <div id="resultBox" class="hidden mt-8">
+            <div id="resultSuccess" class="hidden border-l-4 border-[#089da1] pl-5">
+                <p class="text-[11px] font-semibold uppercase tracking-widest text-[#5C5C5C]">Estimated Value</p>
+                <p class="mt-1.5">
+                    <span id="resultLakhs" class="font-serif-display text-4xl text-[#1A1A1A]">—</span>
+                    <span class="ml-1 text-base font-medium text-[#5C5C5C]">Lakhs</span>
+                </p>
+                <p id="resultMmk" class="mt-1 text-[13px] text-[#5C5C5C]"></p>
+                <p class="mt-2.5 text-[12px] text-[#5C5C5C]">Estimate only — actual prices vary with condition, location and market.</p>
+            </div>
+            <div id="resultError" class="hidden border-l-4 border-red-700 pl-5">
+                <p id="resultErrorTitle" class="text-[14px] font-semibold text-red-800">Something went wrong</p>
+                <p id="resultErrorMsg" class="mt-1 text-[13px] text-[#5C5C5C]"></p>
+            </div>
+        </div>
+
+        <p class="mt-12 border-t border-[#D9D4CC] pt-5 text-[12px] text-[#5C5C5C]">Built with FastAPI and scikit-learn · Yangon, Myanmar</p>
+    </main>
 
     <script>
         const API_BASE_URL = "http://127.0.0.1:8000";
-        const form = document.getElementById('predictionForm');
-        const townshipSelect = document.getElementById('tsp_en');
-        const resultBox = document.getElementById('resultBox');
-        const resultTitle = document.getElementById('resultTitle');
-        const resultValue = document.getElementById('resultValue');
+        const form        = document.getElementById('predictionForm');
+        const townshipSel = document.getElementById('tsp_en');
+        const tspError    = document.getElementById('tsp_error');
+        const submitBtn   = document.getElementById('submitBtn');
+        const btnSpinner  = document.getElementById('btnSpinner');
+        const btnText     = document.getElementById('btnText');
+        const resultBox   = document.getElementById('resultBox');
+        const resOk       = document.getElementById('resultSuccess');
+        const resErr      = document.getElementById('resultError');
+        const resLakhs    = document.getElementById('resultLakhs');
+        const resMmk      = document.getElementById('resultMmk');
+        const resErrTitle = document.getElementById('resultErrorTitle');
+        const resErrMsg   = document.getElementById('resultErrorMsg');
 
-        // Dynamic Initialization: Hydrate Select Menu mapping from API definitions
+        const FALLBACK_TOWNSHIPS = ["Ahlone","Bahan","Botahtaung","Dagon Myothit (North)","Dagon Myothit (South)","Dawbon","Hlaing","Insein","Kamaryut","Kyauktada","Kyeemyindaing","Lanmadaw","Mayangone","Mingalartaungnyunt","North Okkalapa","Pazundaung","Sanchaung","South Okkalapa","Tamwe","Thaketa","Thingangyun","Yankin"];
+
+        function populateTownships(list) {
+            townshipSel.innerHTML = '<option value="">Select a township…</option>';
+            list.forEach(t => {
+                const o = document.createElement('option');
+                o.value = t; o.textContent = t;
+                townshipSel.appendChild(o);
+            });
+        }
+
         async function loadTownships() {
             try {
-                const response = await fetch(`${API_BASE_URL}/townships`);
-                if (!response.ok) throw new Error("Metadata pipeline sync failure.");
-                const data = await response.json();
-                
-                data.townships.forEach(township => {
-                    const option = document.createElement('option');
-                    option.value = township;
-                    option.textContent = township;
-                    townshipSelect.appendChild(option);
-                });
-            } catch (err) {
-                console.error("Initialization error:", err);
-                // Fallback option mapping configuration safety injection
-                const fallback = ["Bahan", "Hlaing", "Kamaryut", "South Okkalapa"];
-                fallback.forEach(t => {
-                    const opt = document.createElement('option');
-                    opt.value = t; opt.textContent = t; townshipSelect.appendChild(opt);
-                });
+                const res = await fetch(`${API_BASE_URL}/townships`);
+                if (!res.ok) throw new Error("bad response");
+                const data = await res.json();
+                populateTownships(data.townships || FALLBACK_TOWNSHIPS);
+            } catch {
+                populateTownships(FALLBACK_TOWNSHIPS);
             }
         }
 
-        // Form Submit Interception Routine
+        function setLoading(on) {
+            submitBtn.disabled = on;
+            btnSpinner.classList.toggle('hidden', !on);
+            btnText.textContent = on ? "Estimating…" : "Estimate Price";
+        }
+
+        function showSuccess(lakhs) {
+            const mmk = Math.round(lakhs * 100000); // 1 Lakh = 100,000 MMK
+            resLakhs.textContent = lakhs.toLocaleString(undefined, { maximumFractionDigits: 1 });
+            resMmk.textContent = `≈ ${mmk.toLocaleString()} MMK`;
+            resultBox.classList.remove('hidden');
+            resErr.classList.add('hidden');
+            resOk.classList.remove('hidden');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showError(title, msg) {
+            resErrTitle.textContent = title;
+            resErrMsg.textContent = msg || "";
+            resultBox.classList.remove('hidden');
+            resOk.classList.add('hidden');
+            resErr.classList.remove('hidden');
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Set Loading state visuals
-            resultBox.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200');
-            resultBox.classList.add('bg-slate-50', 'border-slate-200');
-            resultTitle.textContent = "Processing Async Queue...";
-            resultValue.textContent = "Calculating...";
 
-            // Structural Extraction via FormData Mapping to strict numeric representations
-            const formData = new FormData(form);
+            // simple validation
+            if (!townshipSel.value) {
+                tspError.classList.remove('hidden');
+                townshipSel.focus();
+                return;
+            }
+            tspError.classList.add('hidden');
+
+            setLoading(true);
             const payload = {
-                tsp_en: formData.get('tsp_en'),
-                bedroom: parseFloat(formData.get('bedroom')),
-                bathroom: parseFloat(formData.get('bathroom')),
-                aircorn: parseFloat(formData.get('aircorn')),
-                floor: parseFloat(formData.get('floor')),
-                overhead_tank: parseFloat(formData.get('overhead_tank'))
+                tsp_en:        townshipSel.value,
+                bedroom:       parseFloat(document.getElementById('bedroom').value)  || 0,
+                bathroom:      parseFloat(document.getElementById('bathroom').value) || 0,
+                aircorn:       parseFloat(document.getElementById('aircorn').value)  || 0,
+                floor:         parseFloat(document.getElementById('floor').value)    || 0,
+                overhead_tank: document.getElementById('overhead_tank').checked ? 1 : 0
             };
 
             try {
-                const response = await fetch(`${API_BASE_URL}/predict`, {
+                const res = await fetch(`${API_BASE_URL}/predict`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
-                const result = await response.json();
-
-                if (!response.ok) throw new Error(result.detail || "Server communication execution failure.");
-
-                // Render Valuation Target Output Display
-                resultBox.classList.replace('bg-slate-50', 'bg-green-50');
-                resultBox.classList.replace('border-slate-200', 'border-green-200');
-                resultTitle.textContent = "Estimated Value Baseline Matrix";
-                resultValue.textContent = `$${result.predicted_price.toLocaleString()}`;
-                resultValue.classList.replace('text-red-600', 'text-slate-800');
-
-            } catch (error) {
-                // Handle exceptions or service downtime elegantly
-                resultBox.classList.remove('bg-slate-50');
-                resultBox.classList.add('bg-red-50', 'border-red-200');
-                resultTitle.textContent = "System Runtime Exception Exception";
-                resultValue.textContent = "Inference Offline";
-                resultValue.classList.add('text-red-600');
-                console.error("Prediction runtime block failure:", error);
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || "The server could not process this request.");
+                showSuccess(Number(data.predicted_price));
+            } catch (err) {
+                const offline = (err instanceof TypeError); // fetch network failure
+                showError(
+                    offline ? "Can't reach the prediction service" : "Couldn't estimate the price",
+                    offline ? "Make sure the API is running on " + API_BASE_URL : err.message
+                );
+            } finally {
+                setLoading(false);
             }
         });
 
-        // Instantiate Component Engine Lifecycle
         loadTownships();
     </script>
 </body>
