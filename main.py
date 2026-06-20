@@ -79,5 +79,9 @@ def get_supported_townships():
     }
 
 if __name__ == "__main__":
+    import os
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    # Render (and most hosts) inject the port via the PORT env var and require
+    # binding to 0.0.0.0; fall back to 8000 on localhost for local development.
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
