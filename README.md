@@ -99,7 +99,6 @@ uvicorn main:app --reload
 ```
 
 The API will be available at **http://127.0.0.1:8000**.
-Interactive auto-generated docs are at **http://127.0.0.1:8000/docs**.
 
 > Alternatively, `python main.py` runs the built-in Uvicorn launcher on the same
 > host and port.
