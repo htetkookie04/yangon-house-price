@@ -1,0 +1,11 @@
+# Netlify config for the static frontend (index.html).
+# The repo root also contains requirements.txt / .python-version for the Render
+# API deploy. Netlify auto-detects those and tries to install Python deps, so we
+# pin a Python version that ships prebuilt wheels (3.14 has none for scipy 1.13,
+# which forced a source build that needs gfortran and failed).
+[build]
+  publish = "."
+  command = "echo 'Static frontend - no build step required'"
+
+[build.environment]
+  PYTHON_VERSION = "3.12.8"
